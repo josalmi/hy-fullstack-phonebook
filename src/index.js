@@ -1,10 +1,10 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const createError = require("http-errors");
+const { celebrate, errors, Joi } = require("celebrate");
+
 const app = express();
-
 app.set("view engine", "pug");
-
 app.use(bodyParser.json());
 
 const persons = {
@@ -22,15 +22,26 @@ app.get("/api/persons", (req, res, next) => {
   res.json(Object.values(persons));
 });
 
-app.post("/api/persons", (req, res, next) => {
-  const id = Math.floor(Math.random() * 1000000);
-  persons[id] = {
-    id,
-    name: req.body.name,
-    number: req.body.number
-  };
-  res.json(persons[id]);
-});
+app.post(
+  "/api/persons",
+  celebrate({
+    body: Joi.object({
+      name: Joi.string().required(),
+      number: Joi.string().required()
+    })
+  }),
+  (req, res, next) => {
+    if (Object.values(persons).find(person => person.name === req.body.name)) {
+      return next(createError.BadRequest(`"name" must be unique`));
+    }
+    const id = Math.floor(Math.random() * 1000000);
+    persons[id] = {
+      ...req.body,
+      id
+    };
+    res.json(persons[id]);
+  }
+);
 
 app.get("/api/persons/:id", (req, res, next) => {
   const person = persons[req.params.id];
@@ -44,6 +55,8 @@ app.delete("/api/persons/:id", (req, res, next) => {
   delete persons[req.params.id];
   res.sendStatus(204);
 });
+
+app.use(errors());
 
 app.use((err, req, res, next) => {
   if (err instanceof createError.HttpError) {
