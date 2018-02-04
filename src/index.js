@@ -4,7 +4,6 @@ const bodyParser = require("body-parser");
 const createError = require("http-errors");
 const { celebrate, errors, Joi } = require("celebrate");
 const morgan = require("morgan");
-const cors = require("cors");
 
 morgan.token("body", (req, res) => JSON.stringify(req.body));
 
@@ -12,8 +11,8 @@ const app = express();
 app.use(
   morgan(":method :url :body :status :res[content-length] - :response-time ms")
 );
-app.use(cors());
 app.set("view engine", "pug");
+app.use(express.static('public'))
 app.use(bodyParser.json());
 
 const persons = {
