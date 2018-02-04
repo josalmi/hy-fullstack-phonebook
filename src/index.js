@@ -3,8 +3,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const createError = require("http-errors");
 const { celebrate, errors, Joi } = require("celebrate");
+const morgan = require("morgan");
 
 const app = express();
+app.use(morgan("tiny"));
 app.set("view engine", "pug");
 app.use(bodyParser.json());
 
