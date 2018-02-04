@@ -1,4 +1,5 @@
 const express = require("express");
+const createError = require("http-errors");
 const app = express();
 
 app.set("view engine", "pug");
@@ -20,7 +21,18 @@ app.get("/api/persons", (req, res, next) => {
 
 app.get("/api/persons/:id", (req, res, next) => {
   const person = persons.find(person => person.id === Number(req.params.id));
+  if (!person) {
+    return next(createError.NotFound());
+  }
   res.json(person);
+});
+
+app.use((err, req, res, next) => {
+  res.status(err.statusCode).json({
+    error: true,
+    statusCode: err.statusCode,
+    message: err.expose ? err.message : "Something went wrong"
+  });
 });
 
 const port = 3000;
