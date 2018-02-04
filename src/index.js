@@ -4,27 +4,32 @@ const app = express();
 
 app.set("view engine", "pug");
 
-const persons = [
-  { id: 1, name: "Arto Hellas", number: "040-123456" },
-  { id: 2, name: "Martti Tienari", number: "040-123456" },
-  { id: 3, name: "Arto Järvinen", number: "040-123456" },
-  { id: 4, name: "Lea Kutvonen", number: "040-123456" }
-];
+const persons = {
+  1: { id: 1, name: "Arto Hellas", number: "040-123456" },
+  2: { id: 2, name: "Martti Tienari", number: "040-123456" },
+  3: { id: 3, name: "Arto Järvinen", number: "040-123456" },
+  4: { id: 4, name: "Lea Kutvonen", number: "040-123456" }
+};
 
 app.get("/info", (req, res, next) => {
-  res.render("info", { persons, date: new Date() });
+  res.render("info", { persons: Object.values(persons), date: new Date() });
 });
 
 app.get("/api/persons", (req, res, next) => {
-  res.json(persons);
+  res.json(Object.values(persons));
 });
 
 app.get("/api/persons/:id", (req, res, next) => {
-  const person = persons.find(person => person.id === Number(req.params.id));
+  const person = persons[req.params.id];
   if (!person) {
     return next(createError.NotFound());
   }
   res.json(person);
+});
+
+app.delete("/api/persons/:id", (req, res, next) => {
+  delete persons[req.params.id];
+  res.sendStatus(204);
 });
 
 app.use((err, req, res, next) => {
