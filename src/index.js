@@ -1,8 +1,11 @@
 const express = require("express");
+const bodyParser = require("body-parser");
 const createError = require("http-errors");
 const app = express();
 
 app.set("view engine", "pug");
+
+app.use(bodyParser.json());
 
 const persons = {
   1: { id: 1, name: "Arto Hellas", number: "040-123456" },
@@ -17,6 +20,16 @@ app.get("/info", (req, res, next) => {
 
 app.get("/api/persons", (req, res, next) => {
   res.json(Object.values(persons));
+});
+
+app.post("/api/persons", (req, res, next) => {
+  const id = Math.floor(Math.random() * 1000000);
+  persons[id] = {
+    id,
+    name: req.body.name,
+    number: req.body.number
+  };
+  res.json(persons[id]);
 });
 
 app.get("/api/persons/:id", (req, res, next) => {
