@@ -5,8 +5,12 @@ const createError = require("http-errors");
 const { celebrate, errors, Joi } = require("celebrate");
 const morgan = require("morgan");
 
+morgan.token("body", (req, res) => JSON.stringify(req.body));
+
 const app = express();
-app.use(morgan("tiny"));
+app.use(
+  morgan(":method :url :body :status :res[content-length] - :response-time ms")
+);
 app.set("view engine", "pug");
 app.use(bodyParser.json());
 
