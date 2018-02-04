@@ -28,6 +28,14 @@ app.get("/api/persons/:id", (req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
+  if (err instanceof createError.HttpError) {
+    return next(err);
+  }
+  console.error(err);
+  next(createError.InternalServerError());
+});
+
+app.use((err, req, res, next) => {
   res.status(err.statusCode).json({
     error: true,
     statusCode: err.statusCode,
