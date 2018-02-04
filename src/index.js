@@ -1,3 +1,4 @@
+const { STATUS_CODES } = require("http");
 const express = require("express");
 const bodyParser = require("body-parser");
 const createError = require("http-errors");
@@ -68,7 +69,7 @@ app.use((err, req, res, next) => {
 
 app.use((err, req, res, next) => {
   res.status(err.statusCode).json({
-    error: true,
+    error: STATUS_CODES[err.statusCode] || "Unknown error",
     statusCode: err.statusCode,
     message: err.expose ? err.message : "Something went wrong"
   });
