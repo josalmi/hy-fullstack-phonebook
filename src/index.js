@@ -24,8 +24,12 @@ const persons = {
   4: { id: 4, name: "Lea Kutvonen", number: "040-123456" }
 };
 
-app.get("/info", (req, res, next) => {
-  res.render("info", { persons: Object.values(persons), date: new Date() });
+app.get("/info", async (req, res, next) => {
+  try {
+    res.render("info", { persons: await Person.count(), date: new Date() });
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.get("/api/persons", async (req, res, next) => {
