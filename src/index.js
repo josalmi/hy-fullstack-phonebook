@@ -31,13 +31,7 @@ app.get("/info", (req, res, next) => {
 app.get("/api/persons", async (req, res, next) => {
   try {
     const persons = await Person.find({});
-    res.json(
-      persons.map(({ id, name, number }) => ({
-        id,
-        name,
-        number
-      }))
-    );
+    res.json(persons);
   } catch (err) {
     next(err);
   }
