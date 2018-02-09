@@ -63,6 +63,25 @@ app.get("/api/persons/:id", (req, res, next) => {
   res.json(person);
 });
 
+app.patch(
+  "/api/persons/:id",
+  celebrate({
+    body: Joi.object({
+      number: Joi.string().required()
+    })
+  }),
+  async (req, res, next) => {
+    try {
+      const person = await Person.findByIdAndUpdate(req.params.id, req.body, {
+        new: true
+      });
+      res.json(person);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
 app.delete("/api/persons/:id", async (req, res, next) => {
   try {
     await Person.findByIdAndRemove(req.params.id);
