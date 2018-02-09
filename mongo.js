@@ -1,31 +1,31 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
 
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
 }
 
 async function main(args) {
-  const connection = await mongoose.connect(process.env.MONGO_URL);
+  const connection = await mongoose.connect(process.env.MONGO_URL)
   try {
-    const Person = mongoose.model("Person", {
+    const Person = mongoose.model('Person', {
       name: String,
       number: String
-    });
+    })
     if (args.length === 2) {
-      const [name, number] = args;
-      await new Person({ name, number }).save();
-      console.log(`lisätään henkilö ${name} numero ${number} luetteloon`);
+      const [name, number] = args
+      await new Person({ name, number }).save()
+      console.log(`lisätään henkilö ${name} numero ${number} luetteloon`)
     } else {
-      const persons = await Person.find({});
-      console.log("puhelinluettelo:");
+      const persons = await Person.find({})
+      console.log('puhelinluettelo:')
       persons.forEach(person => {
-        console.log(person.name, person.number);
-      });
+        console.log(person.name, person.number)
+      })
     }
   } finally {
-    connection.disconnect();
+    connection.disconnect()
   }
 }
 
-const args = process.argv.slice(2);
-main(args).catch(err => console.error(err));
+const args = process.argv.slice(2)
+main(args).catch(err => console.error(err))

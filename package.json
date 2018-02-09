@@ -6,6 +6,7 @@
     "start": "node src/index.js",
     "watch": "nodemon",
     "mongo": "node mongo.js",
+    "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -22,6 +23,7 @@
     "pug": "^2.0.0-rc.4"
   },
   "devDependencies": {
+    "eslint": "^4.17.0",
     "nodemon": "^1.14.12"
   }
 }
