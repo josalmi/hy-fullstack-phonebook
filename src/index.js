@@ -63,9 +63,13 @@ app.get("/api/persons/:id", (req, res, next) => {
   res.json(person);
 });
 
-app.delete("/api/persons/:id", (req, res, next) => {
-  delete persons[req.params.id];
-  res.sendStatus(204);
+app.delete("/api/persons/:id", async (req, res, next) => {
+  try {
+    await Person.findByIdAndRemove(req.params.id);
+    res.sendStatus(204);
+  } catch (err) {
+    next(new createError.BadRequest("Malformatted id"));
+  }
 });
 
 app.use(errors());
