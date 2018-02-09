@@ -14,7 +14,7 @@ app.use(
   morgan(":method :url :body :status :res[content-length] - :response-time ms")
 );
 app.set("view engine", "pug");
-app.use(express.static('public'))
+app.use(express.static("public"));
 app.use(bodyParser.json());
 
 const persons = {
