@@ -45,16 +45,13 @@ app.post(
       number: Joi.string().required()
     })
   }),
-  (req, res, next) => {
-    if (Object.values(persons).find(person => person.name === req.body.name)) {
-      return next(createError.BadRequest(`"name" must be unique`));
+  async (req, res, next) => {
+    try {
+      const person = await new Person(req.body).save();
+      res.json(person);
+    } catch (err) {
+      next(err);
     }
-    const id = Math.floor(Math.random() * 1000000);
-    persons[id] = {
-      ...req.body,
-      id
-    };
-    res.json(persons[id]);
   }
 );
 
