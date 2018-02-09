@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 mongoose.connect(process.env.MONGO_URL);
 
 const toJSON = {
