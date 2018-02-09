@@ -5,6 +5,8 @@ const createError = require("http-errors");
 const { celebrate, errors, Joi } = require("celebrate");
 const morgan = require("morgan");
 
+const { Person } = require("./db");
+
 morgan.token("body", (req, res) => JSON.stringify(req.body));
 
 const app = express();
@@ -26,8 +28,19 @@ app.get("/info", (req, res, next) => {
   res.render("info", { persons: Object.values(persons), date: new Date() });
 });
 
-app.get("/api/persons", (req, res, next) => {
-  res.json(Object.values(persons));
+app.get("/api/persons", async (req, res, next) => {
+  try {
+    const persons = await Person.find({});
+    res.json(
+      persons.map(({ id, name, number }) => ({
+        id,
+        name,
+        number
+      }))
+    );
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.post(
