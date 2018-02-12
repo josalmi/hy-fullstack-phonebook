@@ -47,7 +47,11 @@ app.post(
       const person = await new Person(req.body).save()
       res.json(person)
     } catch (err) {
-      next(err)
+      if (err.code === 11000) {
+        next(createError.BadRequest('person with name already exists'))
+      } else {
+        next(err)
+      }
     }
   }
 )
